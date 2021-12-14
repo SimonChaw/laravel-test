@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 
 class DefaultMail extends Mailable
 {
@@ -13,7 +14,9 @@ class DefaultMail extends Mailable
 
     protected $message;
 
-    protected $base64_attachments;
+    protected $file_manifest;
+
+    protected $parent_uuid;
 
     /**
      * Create a new message instance.
@@ -24,7 +27,7 @@ class DefaultMail extends Mailable
     {
         $this->subject = $subject;
         $this->message = $message;
-        $this->base64_attachments = $attachments;
+        $this->file_manifest = $attachments;
     }
 
     /**
@@ -36,9 +39,9 @@ class DefaultMail extends Mailable
     {
         $this->markdown('emails.default')->with('message', $this->message);
 
-        foreach($this->base64_attachments as $attachment)
+        foreach($this->file_manifest as $attachment)
         {
-            $this->attachData($attachment['file_data'], $attachment['filename']);
+            $this->attach(Storage::path($attachment['file_path']), ['as' => $attachment['filename']]);
         }
 
         return $this;

@@ -48,11 +48,11 @@ class MailingTest extends TestCase
         $attachments = [
             [
                 'filename' => 'portrait.jpg',
-                'file_data' => 'data:image/jpeg;base64,'.base64_encode(file_get_contents(str_replace('@', DIRECTORY_SEPARATOR,'tests@MailAttachments@portrait.jpg')))
+                'file_data' => base64_encode(file_get_contents(str_replace('@', DIRECTORY_SEPARATOR,'tests@MailAttachments@portrait.jpg')))
             ],
             [
                 'filename' => 'resume.pdf',
-                'file_data' => 'data:file/pdf;base64,'.base64_encode(file_get_contents(str_replace('@', DIRECTORY_SEPARATOR,'tests@MailAttachments@resume.pdf')))
+                'file_data' => base64_encode(file_get_contents(str_replace('@', DIRECTORY_SEPARATOR,'tests@MailAttachments@resume.pdf')))
             ]
         ];
 
