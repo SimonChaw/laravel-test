@@ -23,7 +23,7 @@ class MailingTest extends TestCase
 
         $emails = $this->get_test_emails();
 
-        $this->postJson('/api/mail', ['emails' => $emails])->assertStatus(200);
+        $this->postJson('/api/send', ['emails' => $emails])->assertStatus(200);
         Queue::assertPushed(SendMail::class, 50);
     }
 
@@ -37,7 +37,7 @@ class MailingTest extends TestCase
         Queue::fake();
 
         $emails = $this->get_test_emails(2, false);
-        $this->postJson('/api/mail', ['emails' => $emails])->assertStatus(422);
+        $this->postJson('/api/send', ['emails' => $emails])->assertStatus(422);
         Queue::assertNothingPushed();
     }
 

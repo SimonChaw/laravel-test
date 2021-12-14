@@ -15,7 +15,7 @@ use App\Http\Controllers\MailingController;
 |
 */
 
-Route::post('/mail', [MailingController::class, 'send']);
+Route::post('/send', [MailingController::class, 'send']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
