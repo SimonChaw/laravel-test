@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\DefaultMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,11 +17,7 @@ class SendMail implements ShouldQueue
 
     protected $to;
 
-    protected $subject;
-
-    protected $body;
-
-    protected $attachments;
+    protected DefaultMail $mail;
 
     /**
      * Create a new job instance.
@@ -30,9 +27,7 @@ class SendMail implements ShouldQueue
     public function __construct($to, $subject, $body, $attachments)
     {
         $this->to = $to;
-        $this->subject = $subject;
-        $this->body = $body;
-        $this->attachments = $attachments;
+        $this->mail = new DefaultMail($subject, $body, $attachments);
     }
 
     /**
@@ -42,13 +37,6 @@ class SendMail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::raw($this->body, function($message) {
-            $message->to($this->to)
-                ->subject($this->subject);
-
-            foreach($this->attachments as $attachment) {
-                $message->attachData($attachment['file_data'], $attachment['filename']);
-            }
-        });
+        Mail::to($this->to)->send($this->mail);
     }
 }
