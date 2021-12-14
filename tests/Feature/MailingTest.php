@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use App\Jobs\SendMail;
+use App\Models\ApiToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class MailingTest extends TestCase
@@ -22,8 +24,8 @@ class MailingTest extends TestCase
         Queue::fake();
 
         $emails = $this->get_test_emails();
-
-        $this->postJson('/api/send', ['emails' => $emails])->assertStatus(200);
+        $token = parent::$token;
+        $this->postJson("/api/send?api_token=${token}", ['emails' => $emails])->assertStatus(200);
         Queue::assertPushed(SendMail::class, 50);
     }
 
@@ -35,9 +37,9 @@ class MailingTest extends TestCase
     public function test_invalid_mail_not_queued()
     {
         Queue::fake();
-
         $emails = $this->get_test_emails(2, false);
-        $this->postJson('/api/send', ['emails' => $emails])->assertStatus(422);
+        $token = parent::$token;
+        $this->postJson("/api/send?api_token=${token}", ['emails' => $emails])->assertStatus(422);
         Queue::assertNothingPushed();
     }
 
