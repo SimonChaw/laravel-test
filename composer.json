@@ -12,7 +12,8 @@
         "laravel/horizon": "^5.7",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+        "ext-fileinfo": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

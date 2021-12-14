@@ -43,18 +43,34 @@ class MailingTest extends TestCase
 
 
     protected function get_test_emails($count = 50, $valid = true) {
+        $attachments = [
+            [
+                'filename' => 'portrait.jpg',
+                'file_data' => 'data:image/jpeg;base64,'.base64_encode(file_get_contents(str_replace('@', DIRECTORY_SEPARATOR,'tests@MailAttachments@portrait.jpg')))
+            ],
+            [
+                'filename' => 'resume.pdf',
+                'file_data' => 'data:file/pdf;base64,'.base64_encode(file_get_contents(str_replace('@', DIRECTORY_SEPARATOR,'tests@MailAttachments@resume.pdf')))
+            ]
+        ];
+
         $emails = [];
 
-        // Create 50 emails
         for ($i = 0; $i < $count; $i ++) {
-            $emails[] = [
+            $email = [
                 'to' => $valid ? $this->faker->email : 'not_an_email',
                 'subject' => $this->faker->sentence,
                 'body' => $this->faker->paragraphs(3, true),
                 'attachments' => []
             ];
 
+            $should_attach = rand(0,1) == 1;
+
             // TODO: Randomly add attachments
+            if ($should_attach)
+                $email['attachments'] = $attachments;
+
+            $emails[] = $email;
         }
 
         return $emails;
