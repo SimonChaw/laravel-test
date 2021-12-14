@@ -14,8 +14,9 @@ class MailingController extends Controller
 
         foreach($data['emails'] as $email)
         {
-            new SendMail($email['to'], $email['subject'], $email['body'], $email['attachments']);
+            SendMail::dispatch($email['to'], $email['subject'], $email['body'], $email['attachments']);
         }
+
 
         return response()->json();
     }
