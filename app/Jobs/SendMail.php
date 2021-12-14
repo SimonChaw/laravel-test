@@ -51,6 +51,9 @@ class SendMail implements ShouldQueue
      */
     public function handle()
     {
+        // Was having issues with corrupted attachments, so I decided to save them in storage. In a real life senario I would implement a feature
+        // that prunes old images.
+
         foreach($this->attachments as &$attachment) {
             $attachment['file_path'] = str_replace('@', DIRECTORY_SEPARATOR, "jobs@{$this->uuid}-{$attachment['filename']}");
             Storage::put(
