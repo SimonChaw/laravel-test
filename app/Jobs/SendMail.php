@@ -18,17 +18,17 @@ class SendMail implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public string $uuid;
+    public $uuid;
 
-    protected string $to;
+    public $to;
 
-    protected string $subject;
+    public $subject;
 
-    protected string $body;
+    public $body;
 
-    protected array $attachments;
+    public $attachments;
 
-    protected DefaultMail $mail;
+    public $mail;
 
     /**
      * Create a new job instance.
@@ -51,11 +51,11 @@ class SendMail implements ShouldQueue
      */
     public function handle()
     {
-        // Was having issues with corrupted attachments, so I decided to save them in storage. In a real life senario I would implement a feature
+        // Was having issues with corrupted attachments, so I decided to save them in storage. In a real life scenario I would implement a feature
         // that prunes old images.
 
         foreach($this->attachments as &$attachment) {
-            $attachment['file_path'] = str_replace('@', DIRECTORY_SEPARATOR, "jobs@{$this->uuid}-{$attachment['filename']}");
+            $attachment['file_path'] = str_replace('@', DIRECTORY_SEPARATOR, "public@jobs@{$this->uuid}-{$attachment['filename']}");
             Storage::put(
                 $attachment['file_path'],
                 base64_decode($attachment['file_data']));
@@ -63,5 +63,25 @@ class SendMail implements ShouldQueue
         }
         $this->mail = new DefaultMail($this->subject, $this->body, $this->attachments);
         Mail::to($this->to)->send($this->mail);
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'uuid' => $this->uuid,
+            'to' => $this->to,
+            'subject' => $this->subject,
+            'body' => $this->body,
+            'attachments' => $this->attachments
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->uuid = $data['uuid'];
+        $this->to = $data['to'];
+        $this->subject = $data['subject'];
+        $this->attachments = $data['attachments'];
+        $this->body = $data['body'];
     }
 }

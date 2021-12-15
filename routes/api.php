@@ -1,6 +1,4 @@
 <?php
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MailingController;
 
@@ -17,4 +15,4 @@ use App\Http\Controllers\MailingController;
 
 Route::middleware('auth:api')->post('/send', [MailingController::class, 'send']);
 
-
+Route::middleware('auth:api')->get('/list', [MailingController::class, 'list']);
