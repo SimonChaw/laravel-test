@@ -102,7 +102,6 @@ class MailingTest extends TestCase
 
             $should_attach = rand(0,1) == 1;
 
-            // TODO: Randomly add attachments
             if ($should_attach)
                 $email['attachments'] = $attachments;
 
