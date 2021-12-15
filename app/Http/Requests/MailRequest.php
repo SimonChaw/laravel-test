@@ -32,7 +32,7 @@ class MailRequest extends FormRequest
     public function rules()
     {
         return [
-            'emails' => 'required|array|min:1|max:200',
+            'emails' => 'required|array|min:1|max:1000', // To prevent overload the max amount of emails have been throttled
             'emails.*.to' => 'required|email',
             'emails.*.subject' => 'required|string|min:1',
             'emails.*.body' => 'required|string|min:1|max:384000',
